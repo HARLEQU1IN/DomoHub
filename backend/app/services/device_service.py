@@ -1,0 +1,179 @@
+import uuid
+from typing import Any
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models import Device, Room
+from app.plugins import PLUGINS, get_plugin
+from app.services.websocket import ws_manager
+
+DEFAULT_ROOMS = [
+    {"id": "living", "name": "Гостиная", "icon": "sofa", "color": "#6366f1"},
+    {"id": "bedroom", "name": "Спальня", "icon": "bed", "color": "#8b5cf6"},
+    {"id": "kitchen", "name": "Кухня", "icon": "utensils", "color": "#f59e0b"},
+    {"id": "bathroom", "name": "Ванная", "icon": "bath", "color": "#06b6d4"},
+]
+
+
+class DeviceService:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def ensure_defaults(self) -> None:
+        result = await self.db.execute(select(Room))
+        if not result.scalars().first():
+            for room_data in DEFAULT_ROOMS:
+                self.db.add(Room(**room_data))
+            await self.db.commit()
+
+        result = await self.db.execute(select(Device))
+        if not result.scalars().first():
+            demo = get_plugin("demo")
+            if demo:
+                for device_data in await demo.discover():
+                    device = Device(
+                        id=device_data["id"],
+                        name=device_data["name"],
+                        manufacturer=device_data["manufacturer"],
+                        device_type=device_data["device_type"],
+                        plugin=device_data["plugin"],
+                        room_id=device_data.get("room_id"),
+                        is_online=True,
+                        state=device_data["state"],
+                        capabilities=device_data.get("capabilities", []),
+                        icon=device_data.get("icon", "device"),
+                    )
+                    self.db.add(device)
+                await self.db.commit()
+
+    async def list_devices(self, room_id: str | None = None) -> list[Device]:
+        query = select(Device)
+        if room_id:
+            query = query.where(Device.room_id == room_id)
+        result = await self.db.execute(query)
+        return list(result.scalars().all())
+
+    async def get_device(self, device_id: str) -> Device | None:
+        result = await self.db.execute(select(Device).where(Device.id == device_id))
+        return result.scalar_one_or_none()
+
+    async def update_device_state(self, device_id: str, state: dict[str, Any]) -> Device:
+        device = await self.get_device(device_id)
+        if not device:
+            raise ValueError(f"Device {device_id} not found")
+
+        plugin = get_plugin(device.plugin)
+        if not plugin:
+            raise ValueError(f"Plugin {device.plugin} not found")
+
+        new_state = await plugin.set_state(device_id, device.config, state)
+        device.state = {**device.state, **new_state}
+        device.is_online = True
+        await self.db.commit()
+        await self.db.refresh(device)
+
+        await ws_manager.broadcast(
+            {"type": "device_state_changed", "device_id": device_id, "state": device.state}
+        )
+        return device
+
+    async def refresh_device_state(self, device_id: str) -> Device:
+        device = await self.get_device(device_id)
+        if not device:
+            raise ValueError(f"Device {device_id} not found")
+
+        plugin = get_plugin(device.plugin)
+        if plugin:
+            try:
+                state = await plugin.get_state(device_id, device.config)
+                device.state = state
+                device.is_online = True
+            except Exception:
+                device.is_online = False
+        await self.db.commit()
+        await self.db.refresh(device)
+        return device
+
+    async def discover_devices(self, plugin_name: str) -> list[Device]:
+        plugin = get_plugin(plugin_name)
+        if not plugin:
+            raise ValueError(f"Plugin {plugin_name} not found")
+
+        discovered = await plugin.discover()
+        created: list[Device] = []
+        for item in discovered:
+            existing = await self.get_device(item["id"])
+            if existing:
+                continue
+            device = Device(
+                id=item["id"],
+                name=item["name"],
+                manufacturer=item.get("manufacturer", "unknown"),
+                device_type=item.get("device_type", "other"),
+                plugin=plugin_name,
+                room_id=item.get("room_id"),
+                is_online=True,
+                state=item.get("state", {}),
+                config=item.get("config", {}),
+                capabilities=item.get("capabilities", plugin.get_capabilities(item.get("device_type", "other"))),
+                icon=item.get("icon", "device"),
+            )
+            self.db.add(device)
+            created.append(device)
+        await self.db.commit()
+        return created
+
+    async def add_device(self, data: dict[str, Any]) -> Device:
+        device_id = data.get("id") or str(uuid.uuid4())
+        device = Device(
+            id=device_id,
+            name=data["name"],
+            manufacturer=data.get("manufacturer", "unknown"),
+            device_type=data.get("device_type", "other"),
+            plugin=data["plugin"],
+            room_id=data.get("room_id"),
+            is_online=True,
+            state=data.get("state", {}),
+            config=data.get("config", {}),
+            capabilities=data.get("capabilities", []),
+            icon=data.get("icon", "device"),
+        )
+        self.db.add(device)
+        await self.db.commit()
+        await self.db.refresh(device)
+        return device
+
+    async def delete_device(self, device_id: str) -> bool:
+        device = await self.get_device(device_id)
+        if not device:
+            return False
+        await self.db.delete(device)
+        await self.db.commit()
+        return True
+
+
+class RoomService:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list_rooms(self) -> list[Room]:
+        result = await self.db.execute(select(Room))
+        return list(result.scalars().all())
+
+    async def get_room(self, room_id: str) -> Room | None:
+        result = await self.db.execute(select(Room).where(Room.id == room_id))
+        return result.scalar_one_or_none()
+
+    async def create_room(self, data: dict[str, Any]) -> Room:
+        room_id = data.get("id") or str(uuid.uuid4())
+        room = Room(
+            id=room_id,
+            name=data["name"],
+            icon=data.get("icon", "home"),
+            color=data.get("color", "#6366f1"),
+        )
+        self.db.add(room)
+        await self.db.commit()
+        await self.db.refresh(room)
+        return room
