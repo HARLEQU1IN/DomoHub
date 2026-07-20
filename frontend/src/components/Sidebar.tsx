@@ -56,7 +56,7 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
             <Home size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-lg">DomoHub</h1>
+            <h1 className="font-bold text-lg">MarsFlow</h1>
             <p className="text-xs text-gray-500">Умный дом</p>
           </div>
         </div>
@@ -179,7 +179,7 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span className="text-emerald-400 font-medium">Онлайн</span>
           </div>
-          DomoHub v0.1.0
+          MarsFlow v0.1.0
         </div>
       </div>
     </aside>

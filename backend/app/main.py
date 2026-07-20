@@ -26,9 +26,9 @@ async def lifespan(app: FastAPI):
         service = DeviceService(db)
         await service.ensure_defaults()
 
-    logger.info("DomoHub %s started", settings.app_version)
+    logger.info("MarsFlow %s started", settings.app_version)
     yield
-    logger.info("DomoHub shutdown")
+    logger.info("MarsFlow shutdown")
 
 
 app = FastAPI(

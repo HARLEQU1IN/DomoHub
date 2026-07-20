@@ -154,7 +154,7 @@ function SettingsView() {
         <div>
           <label className="text-sm text-gray-500">Два WiFi роутера</label>
           <p className="text-gray-400 text-sm mt-1">
-            Разверните DomoHub на сервере/VPS с доступом к сети умных устройств. Используйте Tailscale или
+            Разверните MarsFlow на сервере/VPS с доступом к сети умных устройств. Используйте Tailscale или
             ZeroTier для доступа с вашего устройства.
           </p>
         </div>

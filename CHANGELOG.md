@@ -1,6 +1,6 @@
 # Changelog
 
-Все значимые изменения в проекте DomoHub документируются в этом файле.
+Все значимые изменения в проекте MarsFlow документируются в этом файле.
 
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
@@ -44,5 +44,5 @@
 - [ ] Мобильное PWA приложение
 - [ ] Голосовое управление через Whisper
 
-[0.2.0]: https://github.com/HARLEQU1IN/DomoHub/releases/tag/v0.2.0
-[0.1.0]: https://github.com/HARLEQU1IN/DomoHub/releases/tag/v0.1.0
+[0.2.0]: https://github.com/HARLEQU1IN/MarsFlow/releases/tag/v0.2.0
+[0.1.0]: https://github.com/HARLEQU1IN/MarsFlow/releases/tag/v0.1.0

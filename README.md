@@ -1,7 +1,7 @@
-# DomoHub
+# MarsFlow
 
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="64" height="64" alt="DomoHub">
+  <img src="frontend/public/favicon.svg" width="64" height="64" alt="MarsFlow">
 </p>
 
 <p align="center">
@@ -19,11 +19,11 @@
 
 ---
 
-## Зачем DomoHub?
+## Зачем MarsFlow?
 
 Умный дом сегодня — это хаос: Tuya, Xiaomi, Philips Hue, Shelly, Zigbee... Каждый производитель со своим приложением и облаком. А если у вас **два WiFi роутера** — устройства на одной сети, вы на другой — управлять ещё сложнее.
 
-**DomoHub** решает это:
+**MarsFlow** решает это:
 
 - **Один интерфейс** для всех устройств
 - **Плагинная архитектура** — легко добавлять новых производителей
@@ -58,8 +58,8 @@
 ### Docker (рекомендуется)
 
 ```bash
-git clone https://github.com/HARLEQU1IN/DomoHub.git
-cd DomoHub
+git clone https://github.com/HARLEQU1IN/MarsFlow.git
+cd MarsFlow
 docker compose up -d
 ```
 
@@ -94,7 +94,7 @@ npm run dev
        ▼
 ┌─────────────┐                 ┌──────────────┐
 │  VPS/Сервер │◄───────────────►│  Роутер 2    │
-│  DomoHub    │     WiFi 2      │  (IoT сеть)  │
+│  MarsFlow   │     WiFi 2      │  (IoT сеть)  │
 └─────────────┘                 └──────┬───────┘
                                        │
                               ┌────────┴────────┐
@@ -104,10 +104,10 @@ npm run dev
 
 **Варианты:**
 
-1. **VPS/сервер** — разверните DomoHub на машине с доступом к сети IoT-устройств
+1. **VPS/сервер** — разверните MarsFlow на машине с доступом к сети IoT-устройств
 2. **Tailscale / ZeroTier** — VPN-меш между вашим ПК и сервером в IoT-сети
 3. **Облачные API** — Tuya Cloud, Xiaomi Cloud (плагины)
-4. **MQTT брокер** — на роутере 2, DomoHub подключается удалённо
+4. **MQTT брокер** — на роутере 2, MarsFlow подключается удалённо
 
 Подробнее: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 

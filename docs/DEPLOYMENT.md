@@ -1,12 +1,12 @@
-# Развёртывание DomoHub
+# Развёртывание MarsFlow
 
 ## Docker Compose (рекомендуется)
 
 ### Минимальный деплой
 
 ```bash
-git clone https://github.com/HARLEQU1IN/DomoHub.git
-cd DomoHub
+git clone https://github.com/HARLEQU1IN/MarsFlow.git
+cd MarsFlow
 docker compose up -d
 ```
 
@@ -55,20 +55,20 @@ your-domain.com {
 
 ```bash
 # Backend
-cd /opt/DomoHub/backend
+cd /opt/MarsFlow/backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# systemd unit: /etc/systemd/system/domohub.service
+# systemd unit: /etc/systemd/system/marsflow.service
 [Unit]
-Description=DomoHub Backend
+Description=MarsFlow Backend
 After=network.target
 
 [Service]
-User=domohub
-WorkingDirectory=/opt/DomoHub/backend
-ExecStart=/opt/DomoHub/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+User=marsflow
+WorkingDirectory=/opt/MarsFlow/backend
+ExecStart=/opt/MarsFlow/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 
 [Install]
@@ -80,8 +80,8 @@ WantedBy=multi-user.target
 ```bash
 # На Raspberry Pi OS
 sudo apt install docker.io docker-compose-plugin
-git clone https://github.com/HARLEQU1IN/DomoHub.git
-cd DomoHub
+git clone https://github.com/HARLEQU1IN/MarsFlow.git
+cd MarsFlow
 docker compose up -d
 ```
 
@@ -90,7 +90,7 @@ docker compose up -d
 ## Tailscale (доступ из другой сети)
 
 ```bash
-# На сервере с DomoHub
+# На сервере с MarsFlow
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 
@@ -101,10 +101,10 @@ sudo tailscale up
 ## Обновление
 
 ```bash
-cd DomoHub
+cd MarsFlow
 git pull
 docker compose build
 docker compose up -d
 ```
 
-Данные сохраняются в Docker volume `domohub-data`.
+Данные сохраняются в Docker volume `marsflow-data`.
