@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Menu } from 'lucide-react'
 import { api, type Device, type Room, type SystemStatus } from './api'
 import { DeviceCard } from './components/DeviceCard'
 import { Sidebar } from './components/Sidebar'
@@ -176,6 +177,7 @@ export default function App() {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const loadData = async () => {
     try {
@@ -243,7 +245,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-surface">
       <Sidebar
         rooms={rooms}
         selectedRoom={selectedRoom}
@@ -252,8 +254,25 @@ export default function App() {
         onTabChange={setActiveTab}
         onAddRoom={handleAddRoom}
         onDeleteRoom={handleDeleteRoom}
+        isMobileOpen={sidebarOpen}
+        onCloseMobile={() => setSidebarOpen(false)}
       />
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 min-w-0 overflow-y-auto">
+        <div className="sticky top-0 z-30 flex items-center justify-between border-b border-surface-border bg-surface/90 px-4 py-3 backdrop-blur lg:hidden">
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg bg-surface-raised text-gray-200 hover:bg-surface-overlay"
+          >
+            <Menu size={20} />
+          </button>
+          <div className="min-w-0 text-center">
+            <div className="truncate text-sm font-semibold">MarsFlow</div>
+            <div className="truncate text-xs text-gray-500">Home Assistant</div>
+          </div>
+          <div className="w-10" />
+        </div>
+        <div className="p-4 sm:p-6 lg:p-8">
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
@@ -274,6 +293,7 @@ export default function App() {
             {activeTab === 'settings' && <SettingsView />}
           </>
         )}
+        </div>
       </main>
     </div>
   )

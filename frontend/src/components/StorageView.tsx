@@ -197,14 +197,14 @@ export function StorageView() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-1">Сетевое хранилище</h2>
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold mb-1">Сетевое хранилище</h2>
         <p className="text-gray-500">Файлы, медиа и резервные копии — всё в одном месте</p>
       </div>
 
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <div className="glass-card p-4">
             <div className="text-gray-500 text-xs mb-1">Всего</div>
             <div className="text-xl font-bold">{formatBytes(stats.total_bytes)}</div>
@@ -263,15 +263,15 @@ export function StorageView() {
       </div>
 
       {/* Toolbar */}
-      <div className="glass-card p-4 mb-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1 flex-1 min-w-[200px]">
+      <div className="glass-card p-3 sm:p-4 mb-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="flex items-center gap-1 flex-1 min-w-0 overflow-x-auto pb-1">
             {breadcrumbs.map((crumb, i) => (
-              <span key={crumb.path} className="flex items-center gap-1">
+              <span key={crumb.path} className="flex items-center gap-1 shrink-0">
                 {i > 0 && <ChevronRight size={14} className="text-gray-600" />}
                 <button
                   onClick={() => handleBreadcrumb(crumb.path)}
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
+                  className="text-sm text-gray-400 hover:text-white transition-colors whitespace-nowrap"
                 >
                   {crumb.label}
                 </button>
@@ -279,7 +279,8 @@ export function StorageView() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 bg-surface-overlay rounded-xl px-3 py-1.5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap lg:justify-end">
+          <div className="flex items-center gap-2 bg-surface-overlay rounded-xl px-3 py-1.5 w-full sm:w-auto">
             <Search size={16} className="text-gray-500" />
             <input
               type="text"
@@ -287,7 +288,7 @@ export function StorageView() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="bg-transparent text-sm outline-none w-40"
+              className="bg-transparent text-sm outline-none w-full sm:w-40"
             />
             {searchQuery && (
               <button onClick={() => { setSearchQuery(''); setSearchResults(null) }}>
@@ -314,11 +315,11 @@ export function StorageView() {
           <button
             type="button"
             onClick={() => { setMkdirError(''); setMkdirOpen(true) }}
-            className="btn-ghost flex items-center gap-2 text-sm"
+            className="btn-ghost flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
           >
             <FolderPlus size={16} /> Папка
           </button>
-          <button onClick={() => fileInputRef.current?.click()} className="btn-primary flex items-center gap-2 text-sm">
+          <button onClick={() => fileInputRef.current?.click()} className="btn-primary flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
             <Upload size={16} /> Загрузить
           </button>
           <input
@@ -328,6 +329,7 @@ export function StorageView() {
             className="hidden"
             onChange={(e) => handleUpload(e.target.files)}
           />
+          </div>
         </div>
       </div>
 
@@ -339,7 +341,7 @@ export function StorageView() {
       )}
 
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
           {items.map((item) => (
             <button
               key={item.path}
@@ -362,8 +364,8 @@ export function StorageView() {
           ))}
         </div>
       ) : (
-        <div className="glass-card overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="glass-card overflow-x-auto">
+          <table className="w-full min-w-[540px] text-sm">
             <thead>
               <tr className="border-b border-surface-border text-gray-500 text-left">
                 <th className="p-3 font-medium">Имя</th>
@@ -423,7 +425,7 @@ export function StorageView() {
 
       {/* Selected file panel */}
       {selected && !selected.is_dir && (
-        <div className="fixed bottom-6 right-6 glass-card p-5 w-80 animate-slide-up shadow-2xl">
+        <div className="fixed inset-x-4 bottom-4 z-30 glass-card p-4 sm:p-5 sm:w-80 sm:left-auto sm:right-6 sm:inset-x-auto animate-slide-up shadow-2xl">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
               <FileIcon item={selected} />

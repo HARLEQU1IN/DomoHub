@@ -43,7 +43,7 @@ export function DeviceCard({ device, onToggle, onBrightnessChange }: DeviceCardP
 
   return (
     <div
-      className={`glass-card p-5 transition-all duration-300 hover:border-accent/30 animate-slide-up ${
+      className={`glass-card p-4 sm:p-5 transition-all duration-300 hover:border-accent/30 animate-slide-up ${
         isOn && device.device_type === 'light' ? 'ring-1 ring-accent/20' : ''
       }`}
       style={{
@@ -52,7 +52,7 @@ export function DeviceCard({ device, onToggle, onBrightnessChange }: DeviceCardP
           : undefined,
       }}
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between gap-3 mb-4">
         <div
           className={`p-3 rounded-xl transition-colors ${
             isOn ? 'bg-accent/20 text-accent-hover' : 'bg-surface-overlay text-gray-400'
@@ -60,17 +60,17 @@ export function DeviceCard({ device, onToggle, onBrightnessChange }: DeviceCardP
         >
           <Icon size={22} />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <span
             className={`w-2 h-2 rounded-full ${
               device.is_online ? 'bg-emerald-400 animate-pulse-soft' : 'bg-gray-600'
             }`}
           />
-          <span className="text-xs text-gray-500">{device.manufacturer}</span>
+          <span className="text-xs text-gray-500 truncate">{device.manufacturer}</span>
         </div>
       </div>
 
-      <h3 className="font-semibold text-gray-100 mb-1">{device.name}</h3>
+      <h3 className="font-semibold text-gray-100 mb-1 break-words">{device.name}</h3>
       <p className="text-xs text-gray-500 mb-4 capitalize">{device.device_type}</p>
 
       {device.device_type === 'sensor' && (
@@ -87,7 +87,7 @@ export function DeviceCard({ device, onToggle, onBrightnessChange }: DeviceCardP
       )}
 
       {device.device_type === 'climate' && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-2xl font-bold">{String(device.state.target)}°</div>
             <div className="text-xs text-gray-500 capitalize">{String(device.state.mode)}</div>

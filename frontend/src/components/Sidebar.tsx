@@ -1,6 +1,7 @@
 import {
   Bath,
   Bed,
+  ChevronLeft,
   HardDrive,
   Home,
   LayoutDashboard,
@@ -34,9 +35,21 @@ interface SidebarProps {
   onTabChange: (tab: string) => void
   onAddRoom: (data: { name: string; icon: string; color: string }) => Promise<void>
   onDeleteRoom: (id: string) => Promise<void>
+  isMobileOpen: boolean
+  onCloseMobile: () => void
 }
 
-export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabChange, onAddRoom, onDeleteRoom }: SidebarProps) {
+export function Sidebar({
+  rooms,
+  selectedRoom,
+  onSelectRoom,
+  activeTab,
+  onTabChange,
+  onAddRoom,
+  onDeleteRoom,
+  isMobileOpen,
+  onCloseMobile,
+}: SidebarProps) {
   const [roomModalOpen, setRoomModalOpen] = useState(false)
   const [roomToDelete, setRoomToDelete] = useState<Room | null>(null)
   const [deleting, setDeleting] = useState(false)
@@ -49,16 +62,36 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
   ]
 
   return (
-    <aside className="w-64 min-h-screen bg-surface-raised border-r border-surface-border flex flex-col">
+    <>
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden ${
+          isMobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={onCloseMobile}
+      />
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-surface-raised border-r border-surface-border flex flex-col transform transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto lg:w-64 lg:min-h-screen ${
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
       <div className="p-6 border-b border-surface-border">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
             <Home size={20} className="text-white" />
           </div>
-          <div>
-            <h1 className="font-bold text-lg">MarsFlowHomeAssistant</h1>
-            <p className="text-xs text-gray-500">Умный дом</p>
+          <div className="min-w-0">
+            <h1 className="font-bold text-lg leading-tight truncate">MarsFlow</h1>
+            <p className="text-xs text-gray-500 truncate">Home Assistant</p>
           </div>
+        </div>
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-overlay"
+          >
+            <ChevronLeft size={18} />
+          </button>
         </div>
       </div>
 
@@ -66,7 +99,10 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => onTabChange(item.id)}
+            onClick={() => {
+              onTabChange(item.id)
+              onCloseMobile()
+            }}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
               activeTab === item.id
                 ? 'bg-accent/15 text-accent-hover'
@@ -93,7 +129,10 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
         </div>
         <div className="space-y-1">
           <button
-            onClick={() => onSelectRoom(null)}
+            onClick={() => {
+              onSelectRoom(null)
+              onCloseMobile()
+            }}
             className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition-all ${
               selectedRoom === null ? 'bg-surface-overlay text-white' : 'text-gray-400 hover:text-gray-200'
             }`}
@@ -112,7 +151,10 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
               >
                 <button
                   type="button"
-                  onClick={() => onSelectRoom(room.id)}
+                  onClick={() => {
+                    onSelectRoom(room.id)
+                    onCloseMobile()
+                  }}
                   className={`flex-1 flex items-center gap-3 px-4 py-2 text-sm transition-all ${
                     selectedRoom === room.id ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
                   }`}
@@ -179,9 +221,10 @@ export function Sidebar({ rooms, selectedRoom, onSelectRoom, activeTab, onTabCha
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span className="text-emerald-400 font-medium">Онлайн</span>
           </div>
-          MarsFlowHomeAssistant v0.1.0
+          MarsFlow v0.1.0
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
