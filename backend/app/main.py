@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.api.routes import router
+from app.api.storage_routes import router as storage_router
 from app.core.config import get_settings
 from app.core.database import init_db
 from app.services.device_service import DeviceService
@@ -24,6 +25,7 @@ async def lifespan(app: FastAPI):
     async with async_session() as db:
         service = DeviceService(db)
         await service.ensure_defaults()
+
     logger.info("DomoHub %s started", settings.app_version)
     yield
     logger.info("DomoHub shutdown")
@@ -45,6 +47,7 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix=settings.api_prefix)
+app.include_router(storage_router, prefix=settings.api_prefix)
 
 
 @app.get("/health")

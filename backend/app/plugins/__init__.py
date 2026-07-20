@@ -1,11 +1,9 @@
 from app.plugins.base import DevicePlugin
-from app.plugins.demo import DemoPlugin
 from app.plugins.http_plugin import HttpPlugin
 from app.plugins.mqtt_plugin import MqttPlugin
 from app.plugins.tuya_plugin import TuyaPlugin
 
 PLUGINS: dict[str, DevicePlugin] = {
-    "demo": DemoPlugin(),
     "http": HttpPlugin(),
     "mqtt": MqttPlugin(),
     "tuya": TuyaPlugin(),

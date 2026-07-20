@@ -53,6 +53,14 @@ async def create_room(data: RoomCreate, db: AsyncSession = Depends(get_db)):
     return await service.create_room(data.model_dump())
 
 
+@router.delete("/rooms/{room_id}")
+async def delete_room(room_id: str, db: AsyncSession = Depends(get_db)):
+    service = RoomService(db)
+    if not await service.delete_room(room_id):
+        raise HTTPException(404, "Room not found")
+    return {"ok": True}
+
+
 @router.get("/devices", response_model=list[DeviceResponse])
 async def get_devices(room_id: str | None = None, db: AsyncSession = Depends(get_db)):
     service = DeviceService(db)

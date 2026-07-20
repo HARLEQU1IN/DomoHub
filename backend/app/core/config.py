@@ -30,6 +30,9 @@ class Settings(BaseSettings):
 
     data_dir: Path = Path("./data")
 
+    # Сетевые хранилища: [{"id":"nas","name":"NAS","path":"/mnt/nas","type":"smb","icon":"server"}]
+    storage_volumes: list[dict] = []
+
 
 @lru_cache
 def get_settings() -> Settings:

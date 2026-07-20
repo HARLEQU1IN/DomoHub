@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api, type Device, type Room, type SystemStatus } from './api'
 import { DeviceCard } from './components/DeviceCard'
 import { Sidebar } from './components/Sidebar'
+import { StorageView } from './components/StorageView'
 
 function DashboardView({
   devices,
@@ -231,6 +232,16 @@ export default function App() {
     }
   }
 
+  const handleAddRoom = async (data: { name: string; icon: string; color: string }) => {
+    const room = await api.createRoom(data)
+    setRooms((prev) => [...prev, room])
+  }
+
+  const handleDeleteRoom = async (id: string) => {
+    await api.deleteRoom(id)
+    setRooms((prev) => prev.filter((r) => r.id !== id))
+  }
+
   return (
     <div className="flex min-h-screen">
       <Sidebar
@@ -239,6 +250,8 @@ export default function App() {
         onSelectRoom={setSelectedRoom}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        onAddRoom={handleAddRoom}
+        onDeleteRoom={handleDeleteRoom}
       />
       <main className="flex-1 p-8 overflow-y-auto">
         {loading ? (
@@ -255,6 +268,7 @@ export default function App() {
                 onBrightnessChange={handleBrightnessChange}
               />
             )}
+            {activeTab === 'storage' && <StorageView />}
             {activeTab === 'plugins' && <PluginsView status={status} />}
             {activeTab === 'ai' && <AiView />}
             {activeTab === 'settings' && <SettingsView />}

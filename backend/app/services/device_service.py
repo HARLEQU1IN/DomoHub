@@ -1,19 +1,15 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Device, Room
-from app.plugins import PLUGINS, get_plugin
+from app.plugins import get_plugin
 from app.services.websocket import ws_manager
 
-DEFAULT_ROOMS = [
-    {"id": "living", "name": "Гостиная", "icon": "sofa", "color": "#6366f1"},
-    {"id": "bedroom", "name": "Спальня", "icon": "bed", "color": "#8b5cf6"},
-    {"id": "kitchen", "name": "Кухня", "icon": "utensils", "color": "#f59e0b"},
-    {"id": "bathroom", "name": "Ванная", "icon": "bath", "color": "#06b6d4"},
-]
+
+DEFAULT_ROOM_IDS = ("living", "bedroom", "kitchen", "bathroom")
 
 
 class DeviceService:
@@ -21,31 +17,9 @@ class DeviceService:
         self.db = db
 
     async def ensure_defaults(self) -> None:
-        result = await self.db.execute(select(Room))
-        if not result.scalars().first():
-            for room_data in DEFAULT_ROOMS:
-                self.db.add(Room(**room_data))
-            await self.db.commit()
-
-        result = await self.db.execute(select(Device))
-        if not result.scalars().first():
-            demo = get_plugin("demo")
-            if demo:
-                for device_data in await demo.discover():
-                    device = Device(
-                        id=device_data["id"],
-                        name=device_data["name"],
-                        manufacturer=device_data["manufacturer"],
-                        device_type=device_data["device_type"],
-                        plugin=device_data["plugin"],
-                        room_id=device_data.get("room_id"),
-                        is_online=True,
-                        state=device_data["state"],
-                        capabilities=device_data.get("capabilities", []),
-                        icon=device_data.get("icon", "device"),
-                    )
-                    self.db.add(device)
-                await self.db.commit()
+        await self.db.execute(delete(Device).where(Device.plugin == "demo"))
+        await self.db.execute(delete(Room).where(Room.id.in_(DEFAULT_ROOM_IDS)))
+        await self.db.commit()
 
     async def list_devices(self, room_id: str | None = None) -> list[Device]:
         query = select(Device)
@@ -177,3 +151,14 @@ class RoomService:
         await self.db.commit()
         await self.db.refresh(room)
         return room
+
+    async def delete_room(self, room_id: str) -> bool:
+        room = await self.get_room(room_id)
+        if not room:
+            return False
+        devices = await self.db.execute(select(Device).where(Device.room_id == room_id))
+        for device in devices.scalars().all():
+            device.room_id = None
+        await self.db.delete(room)
+        await self.db.commit()
+        return True

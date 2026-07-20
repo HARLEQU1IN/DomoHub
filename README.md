@@ -13,7 +13,7 @@
   <a href="#быстрый-старт">Быстрый старт</a> •
   <a href="docs/ARCHITECTURE.md">Архитектура</a> •
   <a href="docs/DEPLOYMENT.md">Деплой</a> •
-  <a href="docs/N8N_INTEGRATION.md">n8n / LLM</a> •
+  <a href="docs/STORAGE.md">Хранилище</a> •
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
@@ -29,6 +29,7 @@
 - **Плагинная архитектура** — легко добавлять новых производителей
 - **Self-hosted** — всё на вашем сервере, без облака
 - **n8n / LLM** — управление голосом и текстом через AI
+- **Сетевое хранилище** — файловый менеджер для NAS и локальных дисков
 - **Красивый UI** — простой и понятный, без перегруза
 
 ## Стек технологий
@@ -114,7 +115,6 @@ npm run dev
 
 | Плагин | Статус | Устройства |
 |--------|--------|-----------|
-| Demo | ✅ Готов | Виртуальные устройства для тестов |
 | HTTP/REST | ✅ Готов | Shelly, ESP32, custom REST API |
 | MQTT | ✅ Готов | Zigbee2MQTT, Tasmota, ESPHome |
 | Tuya | 🔶 Beta | Smart Life, Gosund (LAN) |
