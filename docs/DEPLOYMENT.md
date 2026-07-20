@@ -1,12 +1,12 @@
-# Развёртывание MarsFlow
+# Развёртывание MarsFlowHomeAssistant
 
 ## Docker Compose (рекомендуется)
 
 ### Минимальный деплой
 
 ```bash
-git clone https://github.com/HARLEQU1IN/MarsFlow.git
-cd MarsFlow
+git clone https://github.com/HARLEQU1IN/MarsFlowHomeAssistant.git
+cd MarsFlowHomeAssistant
 docker compose up -d
 ```
 
@@ -55,20 +55,20 @@ your-domain.com {
 
 ```bash
 # Backend
-cd /opt/MarsFlow/backend
+cd /opt/MarsFlowHomeAssistant/backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# systemd unit: /etc/systemd/system/marsflow.service
+# systemd unit: /etc/systemd/system/marsflowhomeassistant.service
 [Unit]
-Description=MarsFlow Backend
+Description=MarsFlowHomeAssistant Backend
 After=network.target
 
 [Service]
-User=marsflow
-WorkingDirectory=/opt/MarsFlow/backend
-ExecStart=/opt/MarsFlow/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+User=marsflowhomeassistant
+WorkingDirectory=/opt/MarsFlowHomeAssistant/backend
+ExecStart=/opt/MarsFlowHomeAssistant/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 
 [Install]
@@ -80,8 +80,8 @@ WantedBy=multi-user.target
 ```bash
 # На Raspberry Pi OS
 sudo apt install docker.io docker-compose-plugin
-git clone https://github.com/HARLEQU1IN/MarsFlow.git
-cd MarsFlow
+git clone https://github.com/HARLEQU1IN/MarsFlowHomeAssistant.git
+cd MarsFlowHomeAssistant
 docker compose up -d
 ```
 
@@ -90,7 +90,7 @@ docker compose up -d
 ## Tailscale (доступ из другой сети)
 
 ```bash
-# На сервере с MarsFlow
+# На сервере с MarsFlowHomeAssistant
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 
@@ -101,10 +101,10 @@ sudo tailscale up
 ## Обновление
 
 ```bash
-cd MarsFlow
+cd MarsFlowHomeAssistant
 git pull
 docker compose build
 docker compose up -d
 ```
 
-Данные сохраняются в Docker volume `marsflow-data`.
+Данные сохраняются в Docker volume `marsflowhomeassistant-data`.

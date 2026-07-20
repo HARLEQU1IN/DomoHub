@@ -1,7 +1,7 @@
-# MarsFlow
+# MarsFlowHomeAssistant
 
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="64" height="64" alt="MarsFlow">
+  <img src="frontend/public/favicon.svg" width="64" height="64" alt="MarsFlowHomeAssistant">
 </p>
 
 <p align="center">
@@ -19,11 +19,11 @@
 
 ---
 
-## Зачем MarsFlow?
+## Зачем MarsFlowHomeAssistant?
 
 Умный дом сегодня — это хаос: Tuya, Xiaomi, Philips Hue, Shelly, Zigbee... Каждый производитель со своим приложением и облаком. А если у вас **два WiFi роутера** — устройства на одной сети, вы на другой — управлять ещё сложнее.
 
-**MarsFlow** решает это:
+**MarsFlowHomeAssistant** решает это:
 
 - **Один интерфейс** для всех устройств
 - **Плагинная архитектура** — легко добавлять новых производителей
@@ -58,8 +58,8 @@
 ### Docker (рекомендуется)
 
 ```bash
-git clone https://github.com/HARLEQU1IN/MarsFlow.git
-cd MarsFlow
+git clone https://github.com/HARLEQU1IN/MarsFlowHomeAssistant.git
+cd MarsFlowHomeAssistant
 docker compose up -d
 ```
 
@@ -94,7 +94,7 @@ npm run dev
        ▼
 ┌─────────────┐                 ┌──────────────┐
 │  VPS/Сервер │◄───────────────►│  Роутер 2    │
-│  MarsFlow   │     WiFi 2      │  (IoT сеть)  │
+│  MarsFlowHomeAssistant   │     WiFi 2      │  (IoT сеть)  │
 └─────────────┘                 └──────┬───────┘
                                        │
                               ┌────────┴────────┐
@@ -104,10 +104,10 @@ npm run dev
 
 **Варианты:**
 
-1. **VPS/сервер** — разверните MarsFlow на машине с доступом к сети IoT-устройств
+1. **VPS/сервер** — разверните MarsFlowHomeAssistant на машине с доступом к сети IoT-устройств
 2. **Tailscale / ZeroTier** — VPN-меш между вашим ПК и сервером в IoT-сети
 3. **Облачные API** — Tuya Cloud, Xiaomi Cloud (плагины)
-4. **MQTT брокер** — на роутере 2, MarsFlow подключается удалённо
+4. **MQTT брокер** — на роутере 2, MarsFlowHomeAssistant подключается удалённо
 
 Подробнее: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 

@@ -1,6 +1,6 @@
 # Интеграция с n8n и LLM
 
-MarsFlow предоставляет webhook API для управления устройствами из n8n, Telegram-ботов, голосовых ассистентов и любых LLM.
+MarsFlowHomeAssistant предоставляет webhook API для управления устройствами из n8n, Telegram-ботов, голосовых ассистентов и любых LLM.
 
 ## API Endpoints
 
@@ -78,7 +78,7 @@ MarsFlow предоставляет webhook API для управления ус
 ### Шаг 2: Получить устройства
 
 ```
-GET http://marsflow:8000/api/v1/n8n/devices
+GET http://marsflowhomeassistant:8000/api/v1/n8n/devices
 ```
 
 ### Шаг 3: LLM (OpenAI / Ollama)
@@ -94,7 +94,7 @@ System prompt:
 ### Шаг 4: Выполнить команду
 
 ```
-POST http://marsflow:8000/api/v1/n8n/command
+POST http://marsflowhomeassistant:8000/api/v1/n8n/command
 Body: {{ $json }}
 ```
 
@@ -123,6 +123,6 @@ POST http://ollama:11434/api/generate
 ## Будущее: MCP сервер
 
 В v0.3 планируется нативный MCP (Model Context Protocol) сервер —
-прямая интеграция с Claude, Cursor и другими AI-ассистентами без n8n.
+прямая интеграция с Claude и другими AI-ассистентами без n8n.
 
 Вдохновение: [LogicaHome](https://github.com/Rovemark/logicahome), [Smart-House-MCP](https://github.com/MaheshBhushan/Smart-House-MCP)

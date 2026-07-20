@@ -1,4 +1,4 @@
-# Сетевое хранилище MarsFlow
+# Сетевое хранилище MarsFlowHomeAssistant
 
 Модуль файлового менеджера, вдохновлённый [NextExplorer](https://github.com/nxzai/NextExplorer), [FileRise](https://github.com/error311/FileRise), [PlainNAS](https://github.com/ismartcoding/plainnas) и [Filebrowser Quantum](https://github.com/gtsteffee/filebrowser).
 

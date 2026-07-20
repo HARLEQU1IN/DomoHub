@@ -26,9 +26,9 @@ async def lifespan(app: FastAPI):
         service = DeviceService(db)
         await service.ensure_defaults()
 
-    logger.info("MarsFlow %s started", settings.app_version)
+    logger.info("MarsFlowHomeAssistant %s started", settings.app_version)
     yield
-    logger.info("MarsFlow shutdown")
+    logger.info("MarsFlowHomeAssistant shutdown")
 
 
 app = FastAPI(

@@ -1,4 +1,4 @@
-# Архитектура MarsFlow
+# Архитектура MarsFlowHomeAssistant
 
 ## Обзор
 
@@ -52,7 +52,7 @@ class DevicePlugin(ABC):
 
 #### 1. Сервер в IoT-сети (рекомендуется)
 
-Разверните MarsFlow на Raspberry Pi / мини-ПК / NAS, подключённом к роутеру 2.
+Разверните MarsFlowHomeAssistant на Raspberry Pi / мини-ПК / NAS, подключённом к роутеру 2.
 Доступ к UI — через Tailscale, ZeroTier или проброс портов.
 
 ```
@@ -61,7 +61,7 @@ class DevicePlugin(ABC):
 
 #### 2. MQTT как мост
 
-MQTT-брокер на роутере 2. MarsFlow на VPS подключается к брокеру.
+MQTT-брокер на роутере 2. MarsFlowHomeAssistant на VPS подключается к брокеру.
 Все MQTT-устройства (Zigbee2MQTT, Tasmota) доступны удалённо.
 
 #### 3. Облачные API
